@@ -7,3 +7,12 @@ This repository is the source code of BBS mod. The `1.20.4` code is in the `mast
 If you'd like to contribute to BBS mod code-wise, I'm not looking for contributions. **Please fork the repository, and make your own version**.
 
 See `LICENSE.md` for information about the license.
+
+## Que voy a hacer en este FORK
+
+- Implementar en el keyframe/tracker de "Damage" un boton para hacer "/kill" al Actor.
+
+- Implementar un nuevo keyframe/tracker llamado "Shadow".
+
+- Ver si es posible agregar al Model Block la posibilidad de equipar items al modelo.
+
