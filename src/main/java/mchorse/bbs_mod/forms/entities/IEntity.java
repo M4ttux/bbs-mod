@@ -55,6 +55,18 @@ public interface IEntity
 
     public void setHurtTimer(int hurtTimer);
 
+    public int getDeathTime();
+
+    public void setDeathTime(int deathTime);
+
+    public boolean hasDeathParticlesSpawned();
+
+    public void setDeathParticlesSpawned(boolean spawned);
+
+    public float getHealth();
+
+    public void setHealth(float health);
+
     public double getX();
 
     public double getPrevX();

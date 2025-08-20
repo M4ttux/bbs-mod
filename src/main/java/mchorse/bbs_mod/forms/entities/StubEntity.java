@@ -24,6 +24,9 @@ public class StubEntity implements IEntity
     private boolean onGround = true;
     private float fallDistance;
     private int hurtTimer;
+    private int deathTime = 0;
+    private float health = 20F;
+    private boolean deathParticlesSpawned = false;
 
     private double prevX;
     private double prevY;
@@ -189,6 +192,42 @@ public class StubEntity implements IEntity
     public void setHurtTimer(int hurtTimer)
     {
         this.hurtTimer = hurtTimer;
+    }
+
+    @Override
+    public int getDeathTime()
+    {
+        return this.deathTime;
+    }
+
+    @Override
+    public void setDeathTime(int deathTime)
+    {
+        this.deathTime = deathTime;
+    }
+
+    @Override
+    public boolean hasDeathParticlesSpawned()
+    {
+        return this.deathParticlesSpawned;
+    }
+
+    @Override
+    public void setDeathParticlesSpawned(boolean spawned)
+    {
+        this.deathParticlesSpawned = spawned;
+    }
+
+    @Override
+    public float getHealth()
+    {
+        return this.health;
+    }
+
+    @Override
+    public void setHealth(float health)
+    {
+        this.health = health;
     }
 
     @Override
@@ -420,6 +459,11 @@ public class StubEntity implements IEntity
 
         this.armSwing -= 1;
         this.age += 1;
+        
+        // Update death time progression like in Minecraft (stops at 20 ticks)
+        if (this.deathTime > 0 && this.deathTime < 20) {
+            this.deathTime++;
+        }
 
         this.prevX = this.x;
         this.prevY = this.y;

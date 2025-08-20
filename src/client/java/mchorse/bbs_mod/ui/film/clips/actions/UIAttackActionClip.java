@@ -20,8 +20,8 @@ public class UIAttackActionClip extends UIActionClip<AttackActionClip>
     {
         super.registerUI();
 
-        this.damage = new UITrackpad((v) -> this.editor.editMultiple(this.clip.damage, (damage) -> damage.set(v.floatValue())));
-        this.damage.limit(0F);
+        this.damage = new UITrackpad((v) -> this.editor.editMultiple(this.clip.damage, (damageField) -> damageField.set(v.floatValue())));
+        this.damage.tooltip(UIKeys.ACTIONS_ATTACK_DAMAGE_TOOLTIP);
     }
 
     @Override

@@ -19,6 +19,7 @@ public class MCEntity implements IEntity
 
     private float prevPrevBodyYaw;
     private Vec3d lastVelocity = Vec3d.ZERO;
+    private boolean deathParticlesSpawned = false;
 
     private float[] extraVariables = new float[10];
     private float[] prevExtraVariables = new float[10];
@@ -179,6 +180,56 @@ public class MCEntity implements IEntity
         if (this.mcEntity instanceof LivingEntity living)
         {
             living.hurtTime = hurtTimer;
+        }
+    }
+
+    @Override
+    public int getDeathTime()
+    {
+        if (this.mcEntity instanceof LivingEntity living)
+        {
+            return living.deathTime;
+        }
+        return 0;
+    }
+
+    @Override
+    public void setDeathTime(int deathTime)
+    {
+        if (this.mcEntity instanceof LivingEntity living)
+        {
+            living.deathTime = deathTime;
+        }
+    }
+
+    @Override
+    public boolean hasDeathParticlesSpawned()
+    {
+        return this.deathParticlesSpawned;
+    }
+
+    @Override
+    public void setDeathParticlesSpawned(boolean spawned)
+    {
+        this.deathParticlesSpawned = spawned;
+    }
+
+    @Override
+    public float getHealth()
+    {
+        if (this.mcEntity instanceof LivingEntity living)
+        {
+            return living.getHealth();
+        }
+        return 20F;
+    }
+
+    @Override
+    public void setHealth(float health)
+    {
+        if (this.mcEntity instanceof LivingEntity living)
+        {
+            living.setHealth(health);
         }
     }
 
@@ -423,6 +474,11 @@ public class MCEntity implements IEntity
     {
         this.lastVelocity = this.mcEntity.getVelocity();
         this.prevPrevBodyYaw = this.getPrevBodyYaw();
+        
+        // Update death time progression like in Minecraft (stops at 20 ticks), but only for LivingEntity
+        if (this.mcEntity instanceof LivingEntity living && living.deathTime > 0 && living.deathTime < 20) {
+            living.deathTime++;
+        }
 
         for (int i = 0; i < this.extraVariables.length; i++)
         {

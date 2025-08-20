@@ -155,7 +155,27 @@ public abstract class BaseFilmController
 
         stack.push();
         MatrixStackUtils.multiply(stack, target == null ? defaultMatrix : target);
-        FormUtilsClient.render(form, formContext);
+        
+        // Handle death animation and effects
+        boolean shouldRenderEntity = true;
+        if (entity.getDeathTime() > 0) {
+            int deathTime = entity.getDeathTime();
+            float deathAngle = (deathTime + transition - 1F) / 20F * 1.6F;
+            
+            // Apply death rotation (90 degrees over time)
+            stack.multiply(net.minecraft.util.math.RotationAxis.POSITIVE_Z.rotationDegrees(Math.min(net.minecraft.util.math.MathHelper.sqrt(deathAngle), 1F) * 90F));
+            
+            // Hide entity and spawn death particles when animation is complete
+            if (deathTime >= 20) {
+                shouldRenderEntity = false;
+                spawnDeathParticles(entity, context);
+            }
+        }
+        
+        // Only render the entity if it should be visible
+        if (shouldRenderEntity) {
+            FormUtilsClient.render(form, formContext);
+        }
 
         if (context.bone != null && UIBaseMenu.renderAxes)
         {
@@ -179,7 +199,8 @@ public abstract class BaseFilmController
 
         stack.pop();
 
-        if (context.map == null && opacity > 0F && context.shadowRadius > 0F)
+        // Only render shadow if entity is not dead (deathTime < 20)
+        if (context.map == null && opacity > 0F && context.shadowRadius > 0F && entity.getDeathTime() < 20)
         {
             stack.push();
             stack.translate(position.x - cx, position.y - cy, position.z - cz);
@@ -591,6 +612,40 @@ public abstract class BaseFilmController
             .setup(this.entities, entity, context)
             .shadow(replay.shadow.get(), replay.shadowSize.get())
             .nameTag(replay.nameTag.get());
+    }
+    
+    /**
+     * Spawn death particles when entity death animation completes
+     */
+    private static void spawnDeathParticles(IEntity entity, FilmControllerContext context)
+    {
+        // Only spawn particles once when deathTime reaches 20
+        if (entity.getDeathTime() == 20 && !entity.hasDeathParticlesSpawned()) {
+            net.minecraft.world.World world = net.minecraft.client.MinecraftClient.getInstance().world;
+            if (world != null) {
+                double x = entity.getX();
+                double y = entity.getY() - 1.0; // 1 block below entity position
+                double z = entity.getZ();
+                
+                // Spawn poof particles (death effect) - only once
+                for (int i = 0; i < 15; i++) {
+                    double offsetX = (world.random.nextDouble() - 0.5) * 1.2; // Default width
+                    double offsetY = world.random.nextDouble() * 1.8; // Default height
+                    double offsetZ = (world.random.nextDouble() - 0.5) * 1.2; // Default width
+                    
+                    world.addParticle(
+                        net.minecraft.particle.ParticleTypes.POOF,
+                        x + offsetX, y + offsetY, z + offsetZ,
+                        (world.random.nextDouble() - 0.5) * 0.2,
+                        world.random.nextDouble() * 0.2,
+                        (world.random.nextDouble() - 0.5) * 0.2
+                    );
+                }
+                
+                // Mark particles as spawned to prevent loop
+                entity.setDeathParticlesSpawned(true);
+            }
+        }
     }
 
     public void shutdown()

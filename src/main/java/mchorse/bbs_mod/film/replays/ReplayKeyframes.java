@@ -148,13 +148,13 @@ public class ReplayKeyframes extends ValueGroup
     public void record(int tick, IEntity entity, List<String> groups)
     {
         boolean empty = groups == null || groups.isEmpty();
-        boolean position = empty || groups.contains(GROUP_POSITION);
-        boolean rotation = empty || groups.contains(GROUP_ROTATION);
-        boolean leftStick = empty || groups.contains(GROUP_LEFT_STICK);
-        boolean rightStick = empty || groups.contains(GROUP_RIGHT_STICK);
-        boolean triggers = empty || groups.contains(GROUP_TRIGGERS);
-        boolean extra1 = empty || groups.contains(GROUP_EXTRA1);
-        boolean extra2 = empty || groups.contains(GROUP_EXTRA2);
+        boolean position = empty || (groups != null && !groups.contains(GROUP_POSITION));
+        boolean rotation = empty || (groups != null && !groups.contains(GROUP_ROTATION));
+        boolean leftStick = empty || (groups != null && !groups.contains(GROUP_LEFT_STICK));
+        boolean rightStick = empty || (groups != null && !groups.contains(GROUP_RIGHT_STICK));
+        boolean triggers = empty || (groups != null && !groups.contains(GROUP_TRIGGERS));
+        boolean extra1 = empty || (groups != null && !groups.contains(GROUP_EXTRA1));
+        boolean extra2 = empty || (groups != null && !groups.contains(GROUP_EXTRA2));
 
         /* Position and rotation */
         if (position)
@@ -232,13 +232,13 @@ public class ReplayKeyframes extends ValueGroup
     public void apply(int tick, IEntity entity, List<String> groups)
     {
         boolean empty = groups == null || groups.isEmpty();
-        boolean position = empty || !groups.contains(GROUP_POSITION);
-        boolean rotation = empty || !groups.contains(GROUP_ROTATION);
-        boolean leftStick = empty || !groups.contains(GROUP_LEFT_STICK);
-        boolean rightStick = empty || !groups.contains(GROUP_RIGHT_STICK);
-        boolean triggers = empty || !groups.contains(GROUP_TRIGGERS);
-        boolean extra1 = empty || !groups.contains(GROUP_EXTRA1);
-        boolean extra2 = empty || !groups.contains(GROUP_EXTRA2);
+        boolean position = empty || (groups != null && !groups.contains(GROUP_POSITION));
+        boolean rotation = empty || (groups != null && !groups.contains(GROUP_ROTATION));
+        boolean leftStick = empty || (groups != null && !groups.contains(GROUP_LEFT_STICK));
+        boolean rightStick = empty || (groups != null && !groups.contains(GROUP_RIGHT_STICK));
+        boolean triggers = empty || (groups != null && !groups.contains(GROUP_TRIGGERS));
+        boolean extra1 = empty || (groups != null && !groups.contains(GROUP_EXTRA1));
+        boolean extra2 = empty || (groups != null && !groups.contains(GROUP_EXTRA2));
 
         if (position)
         {
@@ -284,7 +284,30 @@ public class ReplayKeyframes extends ValueGroup
         entity.setSneaking(this.sneaking.interpolate(tick) != 0D);
         entity.setSprinting(this.sprinting.interpolate(tick) != 0D);
         entity.setOnGround(this.grounded.interpolate(tick) != 0D);
-        entity.setHurtTimer(this.damage.interpolate(tick).intValue());
+        
+        double damageValue = this.damage.interpolate(tick);
+        
+        // Handle kill command (damage = -1)
+        if (damageValue == -1.0) {
+            // Only start death animation if not already in death state
+            if (entity.getDeathTime() == 0) {
+                entity.setDeathTime(1);   // Start death animation
+                entity.setHealth(0.0F);   // Set health to zero
+                entity.setHurtTimer(10);  // Red flash effect (10 ticks)
+                entity.setDeathParticlesSpawned(false); // Reset particles flag for new death
+            }
+            // Don't interfere with death progression once started
+        } else if (damageValue >= 0) {
+            // Normal damage application
+            entity.setHurtTimer((int) damageValue);
+            
+            // Reset death state if not killed
+            if (entity.getDeathTime() > 0) {
+                entity.setDeathTime(0);
+                entity.setHealth(20.0F);  // Reset to full health
+                entity.setDeathParticlesSpawned(false); // Reset particles flag
+            }
+        }
 
         float[] sticks = entity.getExtraVariables();
 
