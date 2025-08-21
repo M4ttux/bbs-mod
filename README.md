@@ -14,6 +14,8 @@ See `LICENSE.md` for information about the license.
 
 - ✅ **Implement a new keyframe/tracker called "Shadow".**
 
+- ✅ **Implement custom inventory selection panel for BBS actor forms.**
+
 - Explore the possibility of adding item equipment functionality to the Model Block.
 
 ## 🆕 Implemented Features
@@ -87,13 +89,51 @@ A comprehensive shadow visibility control system has been implemented, allowing 
 
 ---
 
-## 🇪🇸 Español
+### Custom Inventory Selection Panel
+
+A custom inventory selection panel has been implemented for BBS actor forms, providing an intuitive interface for selecting items from the player's inventory without relying on Minecraft's native inventory screens.
+
+#### ✨ Features:
+
+- **📦 Custom UI Panel**: Independent inventory interface with clean, modern design
+- **� Complete Inventory Access**: Shows both hotbar (slots 0-8) and main inventory (slots 9-35)
+- **🚫 Empty Option**: Dedicated "Clear Selection" option for removing items
+- **� Visual Feedback**: Hover effects and clear visual distinction between empty and filled slots
+- **⚡ Instant Selection**: Click any item to immediately select it and close the panel
+- **🔄 Real-time Updates**: Reflects current player inventory state accurately
+
+#### 🎮 Usage:
+
+1. In any BBS actor form with an item selection field
+2. Click the **player icon button** next to the item field
+3. A custom inventory panel will open showing your current inventory
+4. Click **"Empty"** to clear the selection, or click any item to select it
+5. The panel closes automatically after selection
+
+#### ⚙️ Technical Implementation:
+
+- **UIPlayerInventoryPanel**: Custom overlay panel with mathematical layout system
+- **UIItemStack Integration**: Player icon button for seamless inventory access
+- **Mathematical Positioning**: Precise slot grid layout with consistent spacing
+- **Custom Slot Rendering**: Optimized item display with hover effects
+- **Inventory Synchronization**: Real-time player inventory access and updates
+
+#### 🔧 Customization:
+
+- **Panel Size**: Modify `PANEL_WIDTH` constant for different panel widths
+- **Visual Theme**: Adjust color constants for different visual styles
+- **Layout Spacing**: Change `SLOT_SPACING` and `SECTION_SPACING` for different layouts
+- **Slot Appearance**: Customize slot colors and hover effects in slot rendering methods
+
+---
 
 ## Hoja de Ruta del Fork
 
 - ✅ **Implementar en el keyframe/tracker de "Damage" un boton para hacer "/kill" al Actor.**
 
 - ✅ **Implementar un nuevo keyframe/tracker llamado "Shadow".**
+
+- ✅ **Implementar panel de selección de inventario personalizado para formularios de actores BBS.**
 
 - Ver si es posible agregar al Model Block la posibilidad de equipar items al modelo.
 
@@ -160,9 +200,40 @@ Se ha implementado un sistema completo de control de visibilidad de sombras, per
 - **FilmControllerContext**: Gestión centralizada de visibilidad de sombras
 - **ReplayKeyframes**: Soporte de canal shadow con interpolación adecuada de keyframes
 
+---
+
+### Panel de Selección de Inventario Personalizado
+
+Se ha implementado un panel de selección de inventario personalizado para los formularios de actores BBS, proporcionando una interfaz intuitiva para seleccionar elementos del inventario del jugador sin depender de las pantallas nativas de inventario de Minecraft.
+
+#### ✨ Características:
+
+- **📦 Panel UI Personalizado**: Interfaz de inventario independiente con diseño limpio y moderno
+- **🎒 Acceso Completo al Inventario**: Muestra tanto la hotbar (slots 0-8) como el inventario principal (slots 9-35)
+- **🚫 Opción Vacía**: Opción dedicada "Limpiar Selección" para remover elementos
+- **🎨 Retroalimentación Visual**: Efectos hover y distinción visual clara entre slots vacíos y llenos
+- **⚡ Selección Instantánea**: Haz clic en cualquier elemento para seleccionarlo inmediatamente y cerrar el panel
+- **🔄 Actualizaciones en Tiempo Real**: Refleja con precisión el estado actual del inventario del jugador
+
+#### 🎮 Uso:
+
+1. En cualquier formulario de actor BBS con un campo de selección de elemento
+2. Haz clic en el **botón de icono de jugador** junto al campo de elemento
+3. Se abrirá un panel de inventario personalizado mostrando tu inventario actual
+4. Haz clic en **"Vacío"** para limpiar la selección, o haz clic en cualquier elemento para seleccionarlo
+5. El panel se cierra automáticamente después de la selección
+
+#### ⚙️ Implementación Técnica:
+
+- **UIPlayerInventoryPanel**: Panel overlay personalizado con sistema de layout matemático
+- **Integración UIItemStack**: Botón de icono de jugador para acceso seamless al inventario
+- **Posicionamiento Matemático**: Layout de grid de slots preciso con espaciado consistente
+- **Renderizado de Slots Personalizado**: Visualización optimizada de elementos con efectos hover
+- **Sincronización de Inventario**: Acceso y actualizaciones en tiempo real del inventario del jugador
+
 #### 🔧 Personalización:
 
-- **Detección de Toggle**: Modifica la lógica de detección en UIDoubleKeyframeFactory para diferentes patrones booleanos
-- **Estilo Visual**: Cambia el color del tracker modificando el mapeo COLORS en UIReplaysEditor
-- **Comportamiento por Defecto**: Ajusta la visibilidad de sombra por defecto en constructores de entidad
-
+- **Tamaño del Panel**: Modifica la constante `PANEL_WIDTH` para diferentes anchos de panel
+- **Tema Visual**: Ajusta las constantes de color para diferentes estilos visuales
+- **Espaciado del Layout**: Cambia `SLOT_SPACING` y `SECTION_SPACING` para diferentes layouts
+- **Apariencia de Slots**: Personaliza colores de slots y efectos hover en métodos de renderizado de slots
