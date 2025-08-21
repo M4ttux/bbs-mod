@@ -6,6 +6,7 @@ import mchorse.bbs_mod.forms.FormUtilsClient;
 import mchorse.bbs_mod.ui.UIKeys;
 import mchorse.bbs_mod.ui.framework.UIContext;
 import mchorse.bbs_mod.ui.framework.elements.UIElement;
+import mchorse.bbs_mod.ui.framework.elements.buttons.UIIcon;
 import mchorse.bbs_mod.ui.framework.elements.overlay.UIOverlay;
 import mchorse.bbs_mod.ui.utils.UIUtils;
 import mchorse.bbs_mod.ui.utils.icons.Icons;
@@ -21,11 +22,17 @@ public class UIItemStack extends UIElement
     private Consumer<ItemStack> callback;
     private ItemStack stack;
     private boolean opened;
+    private UIIcon inventoryButton;
 
     public UIItemStack(Consumer<ItemStack> callback)
     {
         this.stack = ItemStack.EMPTY;
         this.callback = callback;
+
+        // Create inventory selection button
+        this.inventoryButton = new UIIcon(Icons.PLAYER, (b) -> this.openInventorySelector());
+        this.inventoryButton.relative(this).x(1.0F, -22).y(0).w(20).h(20);
+        this.add(this.inventoryButton);
 
         this.context((menu) ->
         {
@@ -55,6 +62,25 @@ public class UIItemStack extends UIElement
         this.h(20);
     }
 
+    private void openInventorySelector()
+    {
+        UIPlayerInventoryPanel panel = new UIPlayerInventoryPanel((i) ->
+        {
+            if (this.callback != null)
+            {
+                this.callback.accept(i);
+            }
+
+            this.setStack(i);
+        });
+
+        panel.onClose((a) -> this.opened = false);
+
+        UIOverlay.addOverlay(this.getContext(), panel, 220, 160);
+        UIUtils.playClick();
+        this.opened = true;
+    }
+    
     public void setStack(ItemStack stack)
     {
         this.stack = stack == null ? ItemStack.EMPTY : stack.copy();
@@ -62,6 +88,12 @@ public class UIItemStack extends UIElement
 
     protected boolean subMouseClicked(UIContext context)
     {
+        // Check if inventory button was clicked
+        if (this.inventoryButton.area.isInside(context) && context.mouseButton == 0)
+        {
+            return false; // Let the button handle the click
+        }
+        
         if (this.area.isInside(context) && context.mouseButton == 0)
         {
             this.opened = true;
@@ -91,8 +123,11 @@ public class UIItemStack extends UIElement
     {
         int border = this.opened ? Colors.A100 | BBSSettings.primaryColor.get() : Colors.WHITE;
 
-        context.batcher.box((float)this.area.x, (float)this.area.y, (float)this.area.ex(), (float)this.area.ey(), border);
-        context.batcher.box((float)(this.area.x + 1), (float)(this.area.y + 1), (float)(this.area.ex() - 1), (float)(this.area.ey() - 1), -3750202);
+        // Adjust the item display area to account for the inventory button
+        int itemAreaWidth = this.area.w - 22; // Leave space for inventory button
+
+        context.batcher.box((float)this.area.x, (float)this.area.y, (float)(this.area.x + itemAreaWidth), (float)this.area.ey(), border);
+        context.batcher.box((float)(this.area.x + 1), (float)(this.area.y + 1), (float)(this.area.x + itemAreaWidth - 1), (float)(this.area.ey() - 1), -3750202);
 
         if (this.stack != null && !this.stack.isEmpty())
         {
@@ -101,8 +136,9 @@ public class UIItemStack extends UIElement
 
             matrices.push();
             consumers.setUI(true);
-            context.batcher.getContext().drawItem(this.stack, this.area.mx() - 8, this.area.my() - 8);
-            context.batcher.getContext().drawItemInSlot(context.batcher.getFont().getRenderer(), this.stack, this.area.mx() - 8, this.area.my() - 8);
+            int centerX = this.area.x + (itemAreaWidth / 2);
+            context.batcher.getContext().drawItem(this.stack, centerX - 8, this.area.my() - 8);
+            context.batcher.getContext().drawItemInSlot(context.batcher.getFont().getRenderer(), this.stack, centerX - 8, this.area.my() - 8);
             consumers.setUI(false);
             matrices.pop();
         }
