@@ -52,6 +52,41 @@ Animation duration can be modified by changing the value `20` in:
 
 ---
 
+### Shadow Keyframe/Tracker System
+
+A comprehensive shadow visibility control system has been implemented, allowing precise control over entity shadow rendering through keyframes.
+
+#### ✨ Features:
+
+- **👤 Shadow Toggle**: Control entity shadow visibility with True/False values
+- **🎯 Smart UI Detection**: Automatically detects boolean-like keyframes (0/1 values)
+- **🔄 Real-time Updates**: Shadow visibility changes instantly during playback
+- **🎨 Visual Consistency**: Magenta color matching the Actions tracker
+- **⚡ Performance Optimized**: Minimal rendering overhead
+
+#### 🎮 Usage:
+
+1. Create a **"Shadow"** keyframe on your actor
+2. Set value to **1** (True) to show shadow or **0** (False) to hide shadow
+3. The UI will automatically display as a True/False toggle
+4. Shadow visibility updates in real-time during animation playback
+
+#### ⚙️ Technical Implementation:
+
+- **IEntity Interface**: Methods `isShadowVisible()`, `setShadowVisible()`, `getShadowVisibility()`, `setShadowVisibility()`
+- **UIDoubleKeyframeFactory**: Smart detection for boolean-like keyframes with specialized toggle interface
+- **BaseFilmController**: Integrated shadow rendering logic with keyframe-based control
+- **FilmControllerContext**: Centralized shadow visibility management
+- **ReplayKeyframes**: Shadow channel support with proper keyframe interpolation
+
+#### 🔧 Customization:
+
+- **Toggle Detection**: Modify detection logic in UIDoubleKeyframeFactory for different boolean patterns
+- **Visual Style**: Change tracker color by modifying the COLORS mapping in UIReplaysEditor
+- **Default Behavior**: Adjust default shadow visibility in entity constructors
+
+---
+
 ## 🇪🇸 Español
 
 ## Hoja de Ruta del Fork
@@ -95,41 +130,6 @@ Se ha implementado un sistema completo de animación de muerte que simula exacta
 La duración de la animación se puede modificar cambiando el valor `20` en:
 - Métodos `update()` de StubEntity y MCEntity (límite del deathTime)
 - Cálculo de rotación en BaseFilmController (`/20F` en la fórmula de ángulo)
-
----
-
-### Shadow Keyframe/Tracker System
-
-A comprehensive shadow visibility control system has been implemented, allowing precise control over entity shadow rendering through keyframes.
-
-#### ✨ Features:
-
-- **👤 Shadow Toggle**: Control entity shadow visibility with True/False values
-- **🎯 Smart UI Detection**: Automatically detects boolean-like keyframes (0/1 values)
-- **🔄 Real-time Updates**: Shadow visibility changes instantly during playback
-- **🎨 Visual Consistency**: Magenta color matching the Actions tracker
-- **⚡ Performance Optimized**: Minimal rendering overhead
-
-#### 🎮 Usage:
-
-1. Create a **"Shadow"** keyframe on your actor
-2. Set value to **1** (True) to show shadow or **0** (False) to hide shadow
-3. The UI will automatically display as a True/False toggle
-4. Shadow visibility updates in real-time during animation playback
-
-#### ⚙️ Technical Implementation:
-
-- **IEntity Interface**: Methods `isShadowVisible()`, `setShadowVisible()`, `getShadowVisibility()`, `setShadowVisibility()`
-- **UIDoubleKeyframeFactory**: Smart detection for boolean-like keyframes with specialized toggle interface
-- **BaseFilmController**: Integrated shadow rendering logic with keyframe-based control
-- **FilmControllerContext**: Centralized shadow visibility management
-- **ReplayKeyframes**: Shadow channel support with proper keyframe interpolation
-
-#### 🔧 Customization:
-
-- **Toggle Detection**: Modify detection logic in UIDoubleKeyframeFactory for different boolean patterns
-- **Visual Style**: Change tracker color by modifying the COLORS mapping in UIReplaysEditor
-- **Default Behavior**: Adjust default shadow visibility in entity constructors
 
 ---
 
