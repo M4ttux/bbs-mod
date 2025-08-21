@@ -20,6 +20,7 @@ public class MCEntity implements IEntity
     private float prevPrevBodyYaw;
     private Vec3d lastVelocity = Vec3d.ZERO;
     private boolean deathParticlesSpawned = false;
+    private boolean shadowVisible = true;
 
     private float[] extraVariables = new float[10];
     private float[] prevExtraVariables = new float[10];
@@ -212,6 +213,18 @@ public class MCEntity implements IEntity
     public void setDeathParticlesSpawned(boolean spawned)
     {
         this.deathParticlesSpawned = spawned;
+    }
+
+    @Override
+    public boolean isShadowVisible()
+    {
+        return this.shadowVisible;
+    }
+
+    @Override
+    public void setShadowVisible(boolean shadowVisible)
+    {
+        this.shadowVisible = shadowVisible;
     }
 
     @Override

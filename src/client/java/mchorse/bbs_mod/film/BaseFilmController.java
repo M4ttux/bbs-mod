@@ -608,9 +608,15 @@ public abstract class BaseFilmController
 
     protected FilmControllerContext getFilmControllerContext(WorldRenderContext context, Replay replay, IEntity entity)
     {
+        boolean globalShadow = replay.shadow.get();
+        boolean entityShadow = entity.isShadowVisible();
+        
+        // Use keyframe shadow AND global shadow (both must be true)
+        boolean finalShadow = globalShadow && entityShadow;
+        
         return FilmControllerContext.instance
             .setup(this.entities, entity, context)
-            .shadow(replay.shadow.get(), replay.shadowSize.get())
+            .shadow(finalShadow, replay.shadowSize.get())
             .nameTag(replay.nameTag.get());
     }
     

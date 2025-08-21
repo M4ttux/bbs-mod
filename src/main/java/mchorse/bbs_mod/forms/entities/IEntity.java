@@ -67,6 +67,10 @@ public interface IEntity
 
     public void setHealth(float health);
 
+    public boolean isShadowVisible();
+
+    public void setShadowVisible(boolean visible);
+
     public double getX();
 
     public double getPrevX();

@@ -27,6 +27,7 @@ public class StubEntity implements IEntity
     private int deathTime = 0;
     private float health = 20F;
     private boolean deathParticlesSpawned = false;
+    private boolean shadowVisible = true;
 
     private double prevX;
     private double prevY;
@@ -228,6 +229,18 @@ public class StubEntity implements IEntity
     public void setHealth(float health)
     {
         this.health = health;
+    }
+
+    @Override
+    public boolean isShadowVisible()
+    {
+        return this.shadowVisible;
+    }
+
+    @Override
+    public void setShadowVisible(boolean visible)
+    {
+        this.shadowVisible = visible;
     }
 
     @Override
