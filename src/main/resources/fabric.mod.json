@@ -2,10 +2,11 @@
     "schemaVersion": 1,
     "id": "bbs",
     "version": "${version}",
-    "name": "BBS mod",
-    "description": "A new generation of video production mod",
+    "name": "BBS mod - Mattux Edition",
+    "description": "A new generation of video production mod with enhanced Kill Animation, Shadow Tracker, and Custom Inventory Panel features",
     "authors": [
-        "McHorse"
+        "McHorse",
+        "Mattux"
     ],
     "contact": {
         "homepage": "https://www.patreon.com/McHorse"
